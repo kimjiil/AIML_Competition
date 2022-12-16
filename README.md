@@ -4,7 +4,7 @@
     대회에서 주어진 basic AutoEncoder로 학습
 
 <p aligh="center">
-<img src="/Dacon-study/2022-Samsung-AI-Challenge-3D-Metrology/assets/Image_etc/AE_summit1.PNG"
+<img src="/2022-Samsung-AI-Challenge-3D-Metrology/assets/Image_etc/AE_summit1.PNG"
 height="100%" width="100%">
 <caption align="center"> Basic AE model 제출 점수 </caption>
 </p>
