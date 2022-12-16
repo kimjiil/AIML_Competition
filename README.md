@@ -3,10 +3,10 @@
 1. 221202_AE 
     대회에서 주어진 basic AutoEncoder로 학습
 
-<p aligh="center">
+<p align="center">
 <img src="/2022-Samsung-AI-Challenge-3D-Metrology/assets/Image_etc/AE_summit1.PNG"
 height="100%" width="100%">
-<caption align="center"> Basic AE model 제출 점수 </caption>
+<figcaption align="center"> Basic AE model 제출 점수 </figcaption>
 </p>
 
 
