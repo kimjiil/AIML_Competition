@@ -11,3 +11,9 @@ height="100%" width="100%">
 
 ### 2. 221209_cyclegan
     cycle gan으로 학습했으나 실패함(학습기의 구조적인 문제?)    
+
+
+### 3. 221216_cyclegan
+    221209 에서 오류수정
+
+[[실험 결과 링크]](https://wandb.ai/kimjiil2013/Samsung%20sem%20CycleGan%20221216/table?workspace=user-kimjiil2013)
