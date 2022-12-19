@@ -716,7 +716,7 @@ def training(model, train_dataloader, valid_dataloader, epochs, device, fold_i, 
             'Gen_loss': np.mean(loss_list[0]),
             'Dis_A_loss': np.mean(loss_list[1]),
             'Dis_B_loss': np.mean(loss_list[2]),
-            'learning_rate': model.schedular['G'].get_lr().item(),
+            'learning_rate': model.schedular['G'].get_lr(),
             'rmse_loss': rmse_loss
         })
 
@@ -762,3 +762,4 @@ for fold_i, data_loaders in enumerate(folds_dataloader_semtodepth):
         break
 
 wandb.finish()
+
