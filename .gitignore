@@ -4,3 +4,6 @@
 *.json
 *.yaml
 *.log
+*.pth
+*.wandb
+*.txt

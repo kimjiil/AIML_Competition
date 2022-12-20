@@ -430,70 +430,7 @@ class cycleGAN_model(nn.Module):
                     setattr(self, cls_key, state_dict[cls_key])
 
 
-def get_img_list(abs_path):
-    # abs_path = '/home/kji/workspace/jupyter_kji/samsumg_sem_dataset'
 
-    # Dataset path
-    sim_depth_path = os.path.join(abs_path, 'simulation_data/Depth')
-    sim_sem_path = os.path.join(abs_path, 'simulation_data/SEM')
-
-    train_path = os.path.join(abs_path, 'train')
-
-    # only Test
-    test_path = os.path.join(abs_path, 'test/SEM')
-
-    sim_depth_img_path_dic = dict()
-    for case in os.listdir(sim_depth_path):
-        if not case in sim_depth_img_path_dic:
-            sim_depth_img_path_dic[case] = []
-        for folder in os.listdir(os.path.join(sim_depth_path, case)):
-            img_list = glob.glob(os.path.join(sim_depth_path, case, folder, '*.png'))
-            for img in img_list:
-                sim_depth_img_path_dic[case].append(img)
-                sim_depth_img_path_dic[case].append(img)
-
-    sim_sem_img_path_dic = dict()
-    for case in os.listdir(sim_sem_path):
-        if not case in sim_sem_img_path_dic:
-            sim_sem_img_path_dic[case] = []
-        for folder in os.listdir(os.path.join(sim_sem_path, case)):
-            img_list = glob.glob(os.path.join(sim_sem_path, case, folder, '*.png'))
-            sim_sem_img_path_dic[case].extend(img_list)
-
-    train_avg_depth = dict()
-    with open(os.path.join(train_path, "average_depth.csv"), 'r') as csvfile:
-        temp = csv.reader(csvfile)
-        for idx, line in enumerate(temp):
-            if idx > 0:
-                depth_key, site_key = line[0].split('_site')
-                depth_key = depth_key.replace("d", "D")
-                site_key = "site" + site_key
-                if not depth_key in train_avg_depth:
-                    train_avg_depth[depth_key] = dict()
-
-                train_avg_depth[depth_key][site_key] = float(line[1])
-
-    train_img_path_dic = dict()
-    for depth in os.listdir(os.path.join(train_path, "SEM")):
-        if not depth in train_img_path_dic:
-            train_img_path_dic[depth] = []
-        for site in os.listdir(os.path.join(train_path, "SEM", depth)):
-            img_list = glob.glob(os.path.join(train_path, "SEM", depth, site, "*.png"))
-            train_img_path_dic[depth].extend([[temp_img, train_avg_depth[depth][site]] for temp_img in img_list])
-
-    test_img_path_list = glob.glob(os.path.join(test_path, "*.png"))
-
-    result_dic = dict()
-    result_dic['sim'] = dict()
-    result_dic['sim']['sem'] = sim_sem_img_path_dic
-    result_dic['sim']['depth'] = sim_depth_img_path_dic
-    result_dic['train'] = train_img_path_dic
-    result_dic['test'] = np.array(test_img_path_list)
-    result_dic['train_avg_depth'] = train_avg_depth
-
-    return result_dic
-
-result_dic = get_img_list(cfg['db_path'])
 
 ## create k-fold
 def K_fold(k, result_dic):
