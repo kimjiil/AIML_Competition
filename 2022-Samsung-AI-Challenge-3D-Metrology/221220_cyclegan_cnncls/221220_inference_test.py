@@ -32,12 +32,6 @@ elif current_os == "Windows":
         'n_fold': 5
     }
 
-
-'''
-    cnn classifier를 사용해서 case를 분류함
-    Generator를 4가지 case를 나눠서 학습함
-'''
-
 class resnet_block(nn.Module):
     def __init__(self, dim):
         super(resnet_block, self).__init__()
@@ -566,110 +560,33 @@ def create_dataloader(a_key, b_key, t_ratio, result_dic, case=1):
     else:
         b_list = result_dic['train'][f"Depth_{100 + 10 * case}"]
 
-    horizon_transform = transforms.RandomHorizontalFlip(1.0)
-    rotate_transform = transforms.RandomRotation((180, 180))
-    vertical_transform = transforms.RandomVerticalFlip(1.0)
-
     a_train_data_size = int(len(a_list) * t_ratio)
     b_train_data_size = int(len(b_list) * t_ratio)
 
-    train_dataset = gan_dataset(a_list[:a_train_data_size], b_list[:b_train_data_size], None) + \
-                    gan_dataset(a_list[:a_train_data_size], b_list[:b_train_data_size], horizon_transform) + \
-                    gan_dataset(a_list[:a_train_data_size], b_list[:b_train_data_size], rotate_transform) + \
-                    gan_dataset(a_list[:a_train_data_size], b_list[:b_train_data_size], vertical_transform)
+    train_dataset = gan_dataset(a_list[:a_train_data_size], b_list[:b_train_data_size], None)
 
-    valid_dataset = gan_dataset(a_list[a_train_data_size:], b_list[b_train_data_size:], None) + \
-                    gan_dataset(a_list[a_train_data_size:], b_list[b_train_data_size:], horizon_transform) + \
-                    gan_dataset(a_list[a_train_data_size:], b_list[b_train_data_size:], rotate_transform) + \
-                    gan_dataset(a_list[a_train_data_size:], b_list[b_train_data_size:], vertical_transform)
+    valid_dataset = gan_dataset(a_list[a_train_data_size:], b_list[b_train_data_size:], None)
 
     return DataLoader(train_dataset, batch_size=cfg['batch_size'], num_workers=cfg['num_workers'], shuffle=True), \
            DataLoader(valid_dataset, batch_size=cfg['batch_size'], num_workers=cfg['num_workers'], shuffle=True)
 
+t_c1_dl, v_c1_dl = create_dataloader(a_key = 'sim_sem',  b_key = 'sim_depth', t_ratio=0.8,result_dic=result_dic,case=1)
+t_c2_dl, v_c2_dl = create_dataloader(a_key = 'sim_sem',  b_key = 'sim_depth', t_ratio=0.8,result_dic=result_dic,case=2)
+t_c3_dl, v_c3_dl = create_dataloader(a_key = 'sim_sem',  b_key = 'sim_depth', t_ratio=0.8,result_dic=result_dic,case=3)
+t_c4_dl, v_c4_dl = create_dataloader(a_key = 'sim_sem',  b_key = 'sim_depth', t_ratio=0.8,result_dic=result_dic,case=4)
 
-from tqdm.auto import tqdm
-# import wandb
+device = "cuda:0"
 
-def valid(model, valid_dataloader, device):
-    rmse_list = []
-    img_mean_list = []
-    for step_i, data_tuple in enumerate(valid_dataloader):
-        real_a = data_tuple[0].to(device, non_blocking=True)
-        real_b = data_tuple[1].to(device, non_blocking=True)
+model = cycleGAN_model(1, gan_mode='wgan_gp')
+model.model_load('./savemodels/case1_t(semtodepth)_best_model.pth', device="cuda:0")
+model.to("cuda:0")
 
-        rmse_loss, img_dict = model.model_valid(real_a, real_b)
-        rmse_list.append(rmse_loss)
-        if step_i == 0:
-            img_list = [img_dict[key][0][0] for key in img_dict]
-            # img_list = [wandb.Image(PIL.Image.fromarray(np.concatenate((img_list[i], img_list[i+1]), axis=-1)).convert('L'), caption=key)
-            #             for i, key in enumerate(img_dict.keys()) if i % 2 == 0]
-            # wandb.log({
-            #     "example image": img_list
-            # })
-        img_mean_list.extend(list(np.mean(img_dict['fake_B'], axis=(1, 2, 3))))
-    return np.mean(rmse_list)
+for step_i, data_tuple in enumerate(v_c3_dl):
+    sem_image = data_tuple[0].to(device)
+    depth_image = data_tuple[1].to(device)
 
-def training(case, epochs, device, type, checkpoint_path=None):
-    best_rmse_loss = 9999
-    critic_iter = 5
-    best_epoch = 0
+    pred_depth = model.Gen['A'](sem_image)
 
-    if type == 'semtodepth':
-        a_key = 'sim_sem'
-        b_key = 'sim_depth'
-    elif type == 'simtotrain':
-        a_key = 'sim_sem'
-        b_key = 'train'
+    np_pred_depth = (pred_depth * 255).type(torch.uint8).detach().cpu().numpy()
+    print()
 
-    train_dataloader, valid_dataloader = create_dataloader(a_key=a_key,
-                                                           b_key=b_key,
-                                                           t_ratio=0.8,
-                                                           result_dic=result_dic,
-                                                           case=case)
-
-    model = cycleGAN_model(1, optim_lr=0.0002, gan_mode='wgan_gp', guided=False)
-
-    if checkpoint_path:
-        model.model_load(checkpoint_path, device)
-
-    model.to(device)
-
-    for epoch in range(epochs):
-        loss_list = [[], [], []]
-        for step_i, data_tuple in enumerate(train_dataloader):
-            real_a = data_tuple[0].to(device, non_blocking=True)
-            real_b = data_tuple[1].to(device, non_blocking=True)
-
-            dis_loss = model.model_train_discriminator(real_a, real_b)
-            loss_list[1].append(dis_loss['dis_a'])
-            loss_list[2].append(dis_loss['dis_b'])
-            if step_i % critic_iter == 0:
-                gen_loss, img_dic = model.model_train_generator(real_a, real_b)
-                loss_list[0].append(gen_loss['gen'])
-
-                # wandb.log({
-                #     'Gen_step_loss': gen_loss,
-                #     'Dis_A_step_loss': dis_loss['dis_a'],
-                #     'Dis_B_step_loss': dis_loss['dis_b']
-                # })
-            if step_i == 0:
-                break
-        rmse_loss = valid(model, valid_dataloader, device)
-        print(f'epoch - {epoch}, gen loss - {gen_loss}, rmse loss - {rmse_loss}')
-        # wandb.log({
-        #     'Gen_loss': np.mean(loss_list[0]),
-        #     'Dis_A_loss': np.mean(loss_list[1]),
-        #     'Dis_B_loss': np.mean(loss_list[2]),
-        #     'learning_rate': model.schedular['G'].get_lr(),
-        #     'rmse_loss': rmse_loss
-        # })
-
-        if best_rmse_loss > rmse_loss:
-            best_rmse_loss = rmse_loss
-            model.model_save(f'./type-{type}_best_model.pth')
-
-        model.schedular_step()
-    print(f'training end, best epoch - {best_epoch}, best valid rmse loss - {best_rmse_loss}')
-
-
-training(1, cfg['epochs'], cfg['device'], 'semtodepth')
