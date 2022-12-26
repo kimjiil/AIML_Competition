@@ -575,18 +575,38 @@ t_c2_dl, v_c2_dl = create_dataloader(a_key = 'sim_sem',  b_key = 'sim_depth', t_
 t_c3_dl, v_c3_dl = create_dataloader(a_key = 'sim_sem',  b_key = 'sim_depth', t_ratio=0.8,result_dic=result_dic,case=3)
 t_c4_dl, v_c4_dl = create_dataloader(a_key = 'sim_sem',  b_key = 'sim_depth', t_ratio=0.8,result_dic=result_dic,case=4)
 
-device = "cuda:0"
+from tqdm.auto import tqdm
 
-model = cycleGAN_model(1, gan_mode='wgan_gp')
-model.model_load('./savemodels/case1_t(semtodepth)_best_model.pth', device="cuda:0")
-model.to("cuda:0")
+img_mean_list = [[], [], [], []]
+def inference(case, valid_dataloader):
+    device = "cuda:0"
 
-for step_i, data_tuple in enumerate(v_c3_dl):
-    sem_image = data_tuple[0].to(device)
-    depth_image = data_tuple[1].to(device)
+    model = cycleGAN_model(1, gan_mode='wgan_gp')
+    model.model_load(f'./savemodels/case{case}_t(semtodepth)_best_model.pth', device="cuda:0")
+    model.to("cuda:0")
 
-    pred_depth = model.Gen['A'](sem_image)
+    for step_i, data_tuple in enumerate(tqdm(valid_dataloader)):
+        sem_image = data_tuple[0].to(device)
+        depth_image = data_tuple[1].to(device)
 
-    np_pred_depth = (pred_depth * 255).type(torch.uint8).detach().cpu().numpy()
-    print()
+        pred_depth = model.Gen['A'](sem_image)
 
+        np_pred_depth = (pred_depth * 255).type(torch.uint8).detach().cpu().numpy()
+        img_mean_list[case-1].extend(np.mean(np_pred_depth, axis=(1, 2, 3)))
+
+inference(1, v_c1_dl)
+inference(2, v_c2_dl)
+inference(3, v_c3_dl)
+inference(4, v_c4_dl)
+
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(6, 4))
+plt.hist(img_mean_list[0], bins=100, density=True, alpha=0.5, label='case 1', color='black')
+plt.hist(img_mean_list[1], bins=100, density=True, alpha=0.5, label='case 2', color='red')
+plt.hist(img_mean_list[2], bins=100, density=True, alpha=0.5, label='case 3', color='blue')
+plt.hist(img_mean_list[3], bins=100, density=True, alpha=0.5, label='case 4', color='green')
+
+plt.tight_layout()
+plt.legend()
+plt.show()

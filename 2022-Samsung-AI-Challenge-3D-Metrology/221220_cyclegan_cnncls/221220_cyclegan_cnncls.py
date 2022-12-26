@@ -628,11 +628,15 @@ def training(case, epochs, device, type, checkpoint_path=None):
                                                            case=case)
 
     model = cycleGAN_model(1, optim_lr=0.0002, gan_mode='wgan_gp', guided=False)
+    model.to(device)
 
     if checkpoint_path:
         model.model_load(checkpoint_path, device)
 
-    model.to(device)
+
+    # model.optimizer['G'].to(device)
+    # model.optimizer['D_A'].to(device)
+    # model.optimizer['D_B'].to(device)
 
     for epoch in range(epochs):
         loss_list = [[], [], []]
@@ -672,4 +676,4 @@ def training(case, epochs, device, type, checkpoint_path=None):
     print(f'training end, best epoch - {best_epoch}, best valid rmse loss - {best_rmse_loss}')
 
 
-training(1, cfg['epochs'], cfg['device'], 'semtodepth')
+training(1, cfg['epochs'], cfg['device'], 'semtodepth', './savemodels/case1_t(semtodepth)_best_model.pth')
