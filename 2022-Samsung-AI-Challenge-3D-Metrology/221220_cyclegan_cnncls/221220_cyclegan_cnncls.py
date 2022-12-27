@@ -584,7 +584,7 @@ def create_dataloader(a_key, b_key, t_ratio, result_dic, case=1):
                     gan_dataset(a_list[a_train_data_size:], b_list[b_train_data_size:], vertical_transform)
 
     return DataLoader(train_dataset, batch_size=cfg['batch_size'], num_workers=cfg['num_workers'], shuffle=True), \
-           DataLoader(valid_dataset, batch_size=cfg['batch_size'], num_workers=cfg['num_workers'], shuffle=True)
+           DataLoader(valid_dataset, batch_size=cfg['batch_size'], num_workers=cfg['num_workers'], shuffle=False)
 
 
 from tqdm.auto import tqdm
