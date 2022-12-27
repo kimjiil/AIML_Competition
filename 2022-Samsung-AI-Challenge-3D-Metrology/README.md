@@ -6,7 +6,6 @@
 
 <script src="https://gist.github.com/kimjiil/38bfd83aeeb345148a23a8530ed1cc1e.js"></script>
 
-[jupyter notebook 결과](<script src="https://gist.github.com/kimjiil/38bfd83aeeb345148a23a8530ed1cc1e.js"></script>){:target="_blank"}
 
 <p align="center">
 <img src="/2022-Samsung-AI-Challenge-3D-Metrology/221202_AE/AE_summit1.PNG"
