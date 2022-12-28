@@ -51,7 +51,7 @@ case별로 나누어서 cycle gan을 학습시킴.
 - [[jupyter notebook]](./221220_cyclegan_cnncls/221220_cyclegan_cnncls.py.ipynb)
   - case별로 cycle gan을 나누어서 학습한 코드
   
-[[wandb.ai 전체 실험 결과 링크]](https://wandb.ai/kimjiil2013/Samsung%20sem%20CycleGan?workspace=user-kimjiil2013)
+[[wandb.ai 실험 결과 링크]](https://wandb.ai/kimjiil2013/Samsung%20sem%20CycleGan?workspace=user-kimjiil2013)
 
 ### 5. 221227_cyclegan_cnncls
 
@@ -63,6 +63,7 @@ depth를 더 잘 학습하도록 함.
 - [[jupyter notebook]](./221227_cyclegan_cnncls/jupyter%20notebook/221227_cyclegan_train.ipynb)
   - case별로 학습, submission data를 cnn classifier로 case 분류 하고 cycleGan model로 Depth Image 생성
 
+[[221227 wandb 실험 결과 링크]](https://wandb.ai/kimjiil2013/221227_Samsung_sem?workspace=user-kimjiil2013)
 
 - 대회 기간은 지나 갔지만 제출한 데이터는 139명중 30등보다 높게 성능이 나옴.
 
