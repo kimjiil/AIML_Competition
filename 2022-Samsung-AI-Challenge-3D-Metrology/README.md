@@ -67,12 +67,12 @@ depth를 더 잘 학습하도록 함.
 - 대회 기간은 지나 갔지만 제출한 데이터는 139명중 30등보다 높게 성능이 나옴.
 
 <p align="center">
-<img src="/2022-Samsung-AI-Challenge-3D-Metrology/221227_cyclegan_cnncls/cyclegna_result.PNG"
+<img src="/2022-Samsung-AI-Challenge-3D-Metrology/221227_cyclegan_cnncls/cyclegan_result.PNG"
 height="100%" width="100%">
 </p>
 
 <p align="center">
-<img src="/2022-Samsung-AI-Challenge-3D-Metrology/221227_cyclegan_cnncls/lader_board_chart.PNG"
+<img src="/2022-Samsung-AI-Challenge-3D-Metrology/221227_cyclegan_cnncls/leader_board_chart.PNG"
 height="100%" width="100%">
 </p>
 
