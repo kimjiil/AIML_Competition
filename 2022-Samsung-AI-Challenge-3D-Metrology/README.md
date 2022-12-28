@@ -65,7 +65,7 @@ depth를 더 잘 학습하도록 함.
 
 [[221227 wandb 실험 결과 링크]](https://wandb.ai/kimjiil2013/221227_Samsung_sem?workspace=user-kimjiil2013)
 
-- 대회 기간은 지나 갔지만 제출한 데이터는 139명중 30등보다 높게 성능이 나옴.
+- 대회 기간은 지나갔지만 제출한 데이터는 139명중 30등보다 높게 성능이 나옴.
 
 <p align="center">
 <img src="/2022-Samsung-AI-Challenge-3D-Metrology/221227_cyclegan_cnncls/cyclegan_result.PNG"
