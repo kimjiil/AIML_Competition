@@ -50,18 +50,34 @@ case별로 나누어서 cycle gan을 학습시킴.
 
 - [[jupyter notebook]](./221220_cyclegan_cnncls/221220_cyclegan_cnncls.py.ipynb)
   - case별로 cycle gan을 나누어서 학습한 코드
+  
+[[wandb.ai 전체 실험 결과 링크]](https://wandb.ai/kimjiil2013/Samsung%20sem%20CycleGan?workspace=user-kimjiil2013)
 
-
-### 5. 221226_cyclegan_cnncls
+### 5. 221227_cyclegan_cnncls
 
 - 221220에서 성능을 좀더 올리기 위해 paired dataset인 Simulation SEM/Depth Image간의 Guided L1 Loss를 추가하여 
 depth를 더 잘 학습하도록 함.
 
-- CNN classifier는 221220에서 학습한 모델 사용.
+- CNN classifier는 221220_cyclegan_cnncls에서 학습한 모델 사용.
 
-[//]: # (- rmse 계산하는 과정에서 이미지를 uint8로 변환하면서 128이상의 픽셀값이 마이너스로 변환되어 rmse값이 이상하게 변함)
+- [[jupyter notebook]](./221227_cyclegan_cnncls/jupyter%20notebook/221227_cyclegan_train.ipynb)
+  - case별로 학습, submission data를 cnn classifier로 case 분류 하고 cycleGan model로 Depth Image 생성
 
-[//]: # (- [[jupyter notebook]]&#40;./221226_cyclegan_cnncls/221222_cyclegan_guided.ipynb&#41;)
 
-[[wandb.ai 전체 실험 결과 링크]](https://wandb.ai/kimjiil2013/Samsung%20sem%20CycleGan?workspace=user-kimjiil2013)
+- 대회 기간은 지나 갔지만 제출한 데이터는 139명중 30등보다 높게 성능이 나옴.
+
+<p align="center">
+<img src="/2022-Samsung-AI-Challenge-3D-Metrology/221227_cyclegan_cnncls/cyclegna_result.PNG"
+height="100%" width="100%">
+</p>
+
+<p align="center">
+<img src="/2022-Samsung-AI-Challenge-3D-Metrology/221227_cyclegan_cnncls/lader_board_chart.PNG"
+height="100%" width="100%">
+</p>
+
+
+
+
+
 
