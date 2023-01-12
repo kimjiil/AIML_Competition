@@ -1,7 +1,7 @@
 ## 2022 Samsung AI Challenge 3D Metrology
 
 ### 블로그 내용 정리
-[https://kimjiil.github.io/pytorch%20study/dacon-study/](https://kimjiil.github.io/pytorch%20study/dacon-study/)
+[https://kimjiil.github.io/ai/ml%20study/dacon-study-01-2022_Samsung_AI_Challenge_3D_Metrology/](https://kimjiil.github.io/ai/ml%20study/dacon-study-01-2022_Samsung_AI_Challenge_3D_Metrology/)
 
 ### 1. 221202_AE 
 - 대회에서 주어진 basic AutoEncoder로 학습
